@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package algorandGrpc;
+option go_package = "github.com/lorenzhw/algo_grpc";
+
+// A service to perform basic tasks on the algorand blockchain
+service Algorand {
+    rpc CreateWallet (CreateWalletRequest) returns (CreateWalletResponse) {
+    }
+
+    rpc CreateAccount (CreateAccountRequest) returns (CreateAccountResponse) {
+    }
+
+    rpc GetAccount (GetAccountResponse) returns (GetAccountResponse) {
+    }
+
+    rpc MakeTransaction (MakeTransactionRequest) returns (MakeTransactionResponse) {
+    }
+
+    rpc GetTransactions (GetTransactionsRequest) returns (GetTransactionsResponse) {
+    }
+
+    rpc GetBlock (GetBlockRequest) returns (GetBlockResponse) {
+    }
+}
+
+message CreateWalletRequest {
+    string walletName = 1;
+    string walletPassword = 2;
+}
+
+message CreateWalletResponse {
+    string walletID = 1;
+}
+
+message CreateAccountRequest {
+    string walletID = 1;
+    string walletPassword = 2;
+}
+
+message CreateAccountResponse {
+    string address = 1;
+}
+
+message GetAccountRequest {
+    string walletAddress = 1;
+}
+
+message GetAccountResponse {
+    Account account = 1;
+}
+
+message Account {
+    uint64 amount = 1;
+    string address = 2;
+    map<int32, AssetHolding> assets = 3;
+    uint64 rewards = 4;
+    uint64 createdAtRound = 5;
+}
+
+message AssetHolding {
+    string creator = 1;
+    uint64 amount = 2;
+    bool frozen = 3;
+}
+
+message MakeTransactionRequest {
+    string fromWalletID = 1;
+    string fromWalletPassword = 2;
+    string fromWalletAddress = 3;
+    string toWalletAddress = 4;
+}
+
+message MakeTransactionResponse {
+    bool success = 1;
+}
+
+message GetTransactionsRequest {
+    string address = 2;
+}
+
+message GetTransactionsResponse {
+    repeated Transaction transactions = 1;
+}
+
+message Transaction {
+    string from = 1;
+    string to = 2;
+    uint64 amount = 3;
+    uint64 fee = 4;
+}
+
+message GetBlockRequest {
+    uint64 roundNumber = 1;
+}
+
+message GetBlockResponse {
+    Block block = 1;
+}
+
+message Block {
+    uint64 round = 1;
+    repeated Transaction transactions = 2;
+    uint64 timestamp = 3;
+}
+
