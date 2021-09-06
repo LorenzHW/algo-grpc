@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	pb "github.com/LorenzHW/algo-grpc/protos"
 	"google.golang.org/grpc"
 	"log"
@@ -20,6 +21,15 @@ func NewServer() (server *Server) {
 	server = &Server{}
 	server.AlgoInteractor = NewAlgoInteractor()
 	return server
+}
+
+func (s *Server) GetAccount(ctx context.Context, in *pb.GetAccountRequest) (*pb.GetAccountResponse, error) {
+	account, err := s.AlgoInteractor.GetAccount(in)
+	if err != nil {
+		return nil, err
+	}
+	accountMapped := mapToAccount(account)
+	return &pb.GetAccountResponse{Account: accountMapped}, nil
 }
 
 func main() {

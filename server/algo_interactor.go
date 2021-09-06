@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	pb "github.com/LorenzHW/algo-grpc/protos"
 	"github.com/algorand/go-algorand-sdk/client/kmd"
 	"github.com/algorand/go-algorand-sdk/client/v2/algod"
+	"github.com/algorand/go-algorand-sdk/client/v2/common/models"
 	"github.com/algorand/go-algorand-sdk/client/v2/indexer"
 )
 
@@ -45,4 +48,8 @@ func NewAlgoInteractor() (algoInteractor *AlgoInteractor) {
 	algoInteractor.indexerClient = *algoIndexer
 
 	return algoInteractor
+}
+
+func (algoInteractor *AlgoInteractor) GetAccount(getUserAccountRequest *pb.GetAccountRequest) (models.Account, error) {
+	return algoInteractor.algodClient.AccountInformation(getUserAccountRequest.WalletAddress).Do(context.Background())
 }
