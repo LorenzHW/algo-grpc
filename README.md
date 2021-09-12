@@ -15,11 +15,11 @@ A gRPC server to handle basic functionality of the Algorand SDK:
 Make sure that the Algorand Sandbox is running.
 
 Start the server:
-```aidl
+```
 go run ./server/.
 ```
 
 ### Make a request
-```aidl
+```
 go run ./client/.
 ```
