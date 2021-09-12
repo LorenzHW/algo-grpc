@@ -51,5 +51,5 @@ func NewAlgoInteractor() (algoInteractor *AlgoInteractor) {
 }
 
 func (algoInteractor *AlgoInteractor) GetAccount(getUserAccountRequest *pb.GetAccountRequest) (models.Account, error) {
-	return algoInteractor.algodClient.AccountInformation(getUserAccountRequest.WalletAddress).Do(context.Background())
+	return algoInteractor.algodClient.AccountInformation(getUserAccountRequest.AccountAddress).Do(context.Background())
 }
