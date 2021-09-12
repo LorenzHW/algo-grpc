@@ -32,6 +32,48 @@ func (s *Server) GetAccount(ctx context.Context, in *pb.GetAccountRequest) (*pb.
 	return &pb.GetAccountResponse{Account: accountMapped}, nil
 }
 
+func (s *Server) CreateWallet(ctx context.Context, in *pb.CreateWalletRequest) (*pb.CreateWalletResponse, error) {
+	walletID, err := s.AlgoInteractor.CreateWallet(in)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateWalletResponse{WalletID: walletID}, nil
+}
+
+func (s *Server) CreateAccount(ctx context.Context, in *pb.CreateAccountRequest) (*pb.CreateAccountResponse, error) {
+	accountAddress, err := s.AlgoInteractor.CreateAccountForWallet(in)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateAccountResponse{Address: accountAddress}, nil
+}
+
+func (s *Server) MakeTransaction(ctx context.Context, in *pb.MakeTransactionRequest) (*pb.MakeTransactionResponse, error) {
+	err := s.AlgoInteractor.MakeTransaction(in)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.MakeTransactionResponse{Success: true}, nil
+}
+
+func (s *Server) GetTransactions(ctx context.Context, in *pb.GetTransactionsRequest) (*pb.GetTransactionsResponse, error) {
+	transactions, err := s.AlgoInteractor.getTransactions(in)
+	if err != nil {
+		return nil, err
+	}
+	transactionsMapped := mapToTransactions(transactions.Transactions)
+	return &pb.GetTransactionsResponse{Transactions: transactionsMapped}, nil
+}
+
+func (s *Server) GetBlock(ctx context.Context, in *pb.GetBlockRequest) (*pb.GetBlockResponse, error) {
+	block, err := s.AlgoInteractor.GetBlock(in)
+	if err != nil {
+		return nil, err
+	}
+	blockMapped := mapToBlock(block)
+	return &pb.GetBlockResponse{Block: blockMapped}, nil
+}
+
 func main() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {

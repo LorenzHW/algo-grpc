@@ -28,3 +28,27 @@ func mapToAssets(algoAssets []models.AssetHolding) map[int32]*pb.AssetHolding {
 	}
 	return assets
 }
+
+func mapToTransactions(algodTransactions []models.Transaction) []*pb.Transaction {
+	transactions := make([]*pb.Transaction, 0)
+
+	for _, algoTransaction := range algodTransactions {
+		t := pb.Transaction{
+			From:   algoTransaction.Sender,
+			To:     algoTransaction.PaymentTransaction.Receiver,
+			Amount: algoTransaction.PaymentTransaction.Amount,
+			Fee:    algoTransaction.Fee,
+		}
+		transactions = append(transactions, &t)
+	}
+	return transactions
+}
+
+func mapToBlock(algoBlock models.Block) *pb.Block {
+	block := pb.Block{
+		Round:        algoBlock.Round,
+		Transactions: mapToTransactions(algoBlock.Transactions),
+		Timestamp:    0,
+	}
+	return &block
+}
